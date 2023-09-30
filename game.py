@@ -8,11 +8,11 @@ from agent import Agent
 pygame.init()
 
 # Set the popup window size
-WIDTH = 400
-HEIGHT = 500
+WIDTH = 600
+HEIGHT = 600
 
 # Set the size of the squares in the chess board
-SQUARE_SIZE = WIDTH // 4
+SQUARE_SIZE = WIDTH // 6
 
 # Set the title of the popup window
 TITLE = "Isolation Game"
@@ -32,7 +32,7 @@ clock = pygame.time.Clock()
 
 # Creating the queens
 white_queen = Queen(0, 0)
-black_queen = Queen(3, 3)
+black_queen = Queen(5, 5)
 
 # Defining that white starts
 white_turn = True
@@ -41,7 +41,7 @@ black_turn = False
 # Creating the board
 board = Board()
 board.block_pos(0, 0)
-board.block_pos(3, 3)
+board.block_pos(5, 5)
 
 # Starting a game
 game_state = True
@@ -68,8 +68,12 @@ def player_move():
             mouse_pos_x = 1
         elif mouse[0] <= 300:
             mouse_pos_x = 2
-        else:
+        elif mouse[0] <= 400:
             mouse_pos_x = 3
+        elif mouse[0] <= 500:
+            mouse_pos_x = 4
+        elif mouse[0] <= 600:
+            mouse_pos_x = 5
 
         # Get position on y-axis
         if mouse[1] <= 100:
@@ -78,8 +82,12 @@ def player_move():
             mouse_pos_y = 1
         elif mouse[1] <= 300:
             mouse_pos_y = 2
-        else:
+        elif mouse[1] <= 400:
             mouse_pos_y = 3
+        elif mouse[1] <= 500:
+            mouse_pos_y = 4
+        elif mouse[1] <= 600:
+            mouse_pos_y = 5
 
         # Change queen position
         if white_turn:
@@ -96,7 +104,7 @@ def player_move():
                 pass
 
 def agent_move():
-    n = 4  # THe agent will think n steps ahead
+    n = 3  # THe agent will think n steps ahead
 
     # Change queen according to the best position
     if black_turn:
@@ -123,8 +131,8 @@ while running:
         window.fill((255, 255, 255))
 
         # Draw the chess board
-        for x in range(4):
-            for y in range(4):
+        for x in range(6):
+            for y in range(6):
                 # Determine if the square is available
                 for square_id, square_info in board.squares.items():
                     if square_info["pos"] == (x, y):
@@ -155,14 +163,14 @@ while running:
         # Draw the black queen
         window.blit(black_queen_img, (black_queen.pos_x * SQUARE_SIZE, black_queen.pos_y * SQUARE_SIZE))
 
-        # Define who's the player is playing
-        if (count_games%2) == 0:
-            text = pygame.font.SysFont('arial', 40).render('You are white', True, (0, 0, 0))
-        else:
-            text = pygame.font.SysFont('arial', 40).render('You are black', True, (0, 0, 0))
-        pygame.draw.rect(window, (0, 150, 150), (0, 400, WIDTH, HEIGHT))
-        window.blit(text, (
-            WIDTH / 2 - text.get_width() / 2, HEIGHT / 1.3 + text.get_height()))
+        # # Define who's the player is playing
+        # if (count_games%2) == 0:
+        #     text = pygame.font.SysFont('arial', 40).render('You are white', True, (0, 0, 0))
+        # else:
+        #     text = pygame.font.SysFont('arial', 40).render('You are black', True, (0, 0, 0))
+        # pygame.draw.rect(window, (0, 150, 150), (0, 400, WIDTH, HEIGHT))
+        # window.blit(text, (
+        #     WIDTH / 2 - text.get_width() / 2, HEIGHT / 1.3 + text.get_height()))
 
         # Update the display
         pygame.display.update()
