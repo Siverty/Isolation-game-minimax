@@ -21,10 +21,8 @@ TITLE = "Isolation Game Max And Justin"
 white_queen_img = pygame.image.load("images/white_queen.png")
 black_queen_img = pygame.image.load("images/black_queen.png")
 
-# Initialize the popup window
+# Initialize the popup window and set its title
 window = pygame.display.set_mode((WIDTH, HEIGHT))
-
-# Set the pygame window name
 pygame.display.set_caption(TITLE)
 
 # Create a clock object to control the game speed
@@ -32,16 +30,16 @@ clock = pygame.time.Clock()
 
 # Creating the queens
 white_queen = Queen(0, 0)
-black_queen = Queen(5, 5)  # Set the initial position of the black queen to (5, 5)
+black_queen = Queen(5, 5)
 
-# Defining that white starts
+# Defining that white always starts when initializing the game
 white_turn = True
 black_turn = False
 
 # Creating the board
 board = Board()
 board.block_pos(0, 0)
-board.block_pos(5, 5)  # Blocked position for the black queen
+board.block_pos(5, 5)
 
 # Starting a game
 game_state = True
@@ -52,7 +50,7 @@ running = True
 # This is to delay the time when the game ends
 switch = False
 
-# This is so the player is one game white and the other game black
+# This is so the player starts off as white and then switches colours every game
 count_games = 0
 
 # Set the size and position of the board within the window
@@ -62,24 +60,25 @@ BOARD_X = (WIDTH - BOARD_SIZE) // 2  # Center the board horizontally
 BOARD_Y = (HEIGHT - BOARD_SIZE) // 2  # Center the board vertically
 
 # Set the board outline color
-BOARD_OUTLINE_COLOR = (0, 0, 0)  # Black color for the outline
+BOARD_OUTLINE_COLOR = (0, 0, 0)  # Black color for the outline so it's visible on the white background and doesn't look out of place
 
+# Defining the board outline function
 def draw_board_outline():
-    # Draw a rectangle to outline the board
     pygame.draw.rect(window, BOARD_OUTLINE_COLOR, (BOARD_X - 2, BOARD_Y - 2, BOARD_SIZE + 4, BOARD_SIZE + 4), 4)
 
+# Function to handle the player's move with mouse input
 def player_move():
-    # Get the pos input from the user
+    # Get the pos input from the users mouse
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
 
-    if click[0]:  # Left mouse button
+    if click[0]:  # If the left mouse button is clicked
         # Get position on x-axis
         if BOARD_X <= mouse[0] <= BOARD_X + BOARD_SIZE:
             mouse_pos_x = (mouse[0] - BOARD_X) // SQUARE_SIZE
 
         # Get position on y-axis
-        if BOARD_Y <= mouse[1] <= BOARD_Y + BOARD_SIZE:
+        if BOARD_Y <= mouse[1] <= BOARD_Y + BOARD_SIZE: # If the mouse is within the board
             mouse_pos_y = (mouse[1] - BOARD_Y) // SQUARE_SIZE
 
         # Change queen position
@@ -97,9 +96,9 @@ def player_move():
                 pass
 
 def agent_move():
-    n = 3  # The agent will think n steps ahead
+    n = 2  # The agent will think n steps ahead from the current move
 
-    # Change queen according to the best position
+    # Move the currently controlled queen to the best calculated position by agent.py
     if black_turn:
         agent = Agent(black_queen, board, white_queen, n)
         best_move = agent.best_move()
@@ -122,7 +121,7 @@ while running:
         # Clear the window
         window.fill((255, 255, 255))
 
-        # Draw the board outline
+        # Draw the board outline function
         draw_board_outline()
 
         # Draw the chess board within the specified size and position
@@ -141,7 +140,7 @@ while running:
                                     color = (255, 255, 255)  # White
                             else:
                                 # Make unavailable squares red
-                                color = (205, 0, 0)  # Red
+                                color = (255, 0, 0)  # Red
                         else:
                             # Make available squares black/white
                             if (x + y) % 2 == 0:
@@ -185,18 +184,18 @@ while running:
             # Check exception when it's white's turn and both are in blocked pos
             if board.blocked_pos(black_queen):
                 if white_turn:
-                    queen_who_won = "black"
+                    queen_who_won = "Black"
                     switch = True
                 else:
-                    queen_who_won = "white"
+                    queen_who_won = "White"
                     switch = True
             else:
-                queen_who_won = "black"
+                queen_who_won = "Black"
                 switch = True
         elif board.blocked_pos(black_queen):
             count_games += 1
             game_state = False
-            queen_who_won = "white"
+            queen_who_won = "White"
             switch = True
 
         # Move the queen
@@ -226,15 +225,15 @@ while running:
     # When the game is finished
     else:
         if switch:  # We only want this delay once so it's more clear who won the game
-            pygame.time.delay(500)  # 1 second == 1000 milliseconds
+            pygame.time.delay(500)  # 1 second == 1000 milliseconds so 0.5 seconds == 500 milliseconds
             switch = False
 
         # End screen
         window.fill((0, 0, 0))
         font = pygame.font.SysFont('arial', 40)
-        title = font.render(queen_who_won + ' won the game', True, (255, 255, 255))
-        restart_button = font.render('P - Play again', True, (255, 255, 255))
-        quit_button = font.render('S - Stop playing', True, (255, 255, 255))
+        title = font.render(queen_who_won + ' won the game!', True, (255, 255, 255))
+        restart_button = font.render('P  :  Play again', True, (255, 255, 255))
+        quit_button = font.render('    Q  : Quit the game', True, (255, 255, 255))
         window.blit(title, (WIDTH / 2 - title.get_width() / 2, HEIGHT / 2 - title.get_height() / 2))
         window.blit(restart_button, (
             WIDTH / 2 - restart_button.get_width() / 2, HEIGHT / 1.9 + restart_button.get_height()))
@@ -245,13 +244,13 @@ while running:
         # When a key is pressed
         keys = pygame.key.get_pressed()
 
-        # Restart game
+        # Code for restarting the game after completion the first
         if keys[pygame.K_p]:
             game_state = True
 
             # Creating the queens
             white_queen = Queen(0, 0)
-            black_queen = Queen(5, 5)  # Set the initial position of the black queen to (5, 5)
+            black_queen = Queen(5, 5)
 
             # Defining that white starts
             white_turn = True
@@ -260,12 +259,13 @@ while running:
             # Creating the board
             board = Board()
             board.block_pos(0, 0)
-            board.block_pos(5, 5)  # Blocked position for the black queen
+            board.block_pos(5, 5)
 
         # Quit game
-        if keys[pygame.K_s]:
+        if keys[pygame.K_q]:
             pygame.quit()
             quit()
 
 # Quit the game
 pygame.quit()
+
