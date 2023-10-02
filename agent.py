@@ -1,15 +1,14 @@
-# This is the code for the agent (including teh search algorithm)
 import copy
 
-
+# Having the agent not forget the board, the queen and the opponent queen
 class Agent:
     def __init__(self, queen, board, opponent_queen, depth):
         for square in board.squares:
             if board.squares[square]['pos'] == (queen.pos_x, queen.pos_y):
                 self.position = board.squares[square]['pos']
-        self.board = copy.deepcopy(board)  # Making copies so the game doesn't change
-        self.queen = copy.deepcopy(queen)  # Making copies so the game doesn't change
-        self.opponent_queen = copy.deepcopy(opponent_queen)  # Making copies so the game doesn't change
+        self.board = copy.deepcopy(board)
+        self.queen = copy.deepcopy(queen)
+        self.opponent_queen = copy.deepcopy(opponent_queen)
         self.depth = depth  # This will define the amount of moves the AI will think through
 
     def best_move(self):
@@ -40,8 +39,7 @@ class Agent:
             if possible_move:
                 opponent_queen_moves += 1
 
-        # We have an offensive - defensive heuristic what plays offensive the first half of the game
-        # and defensive the second half
+        # Having the agent play offensive in the first half and defensive in the second half
         count_available_squares = 0
         count_total_squares = 0
         for square in board.squares:
